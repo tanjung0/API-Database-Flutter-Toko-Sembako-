@@ -17,21 +17,45 @@ exports.create = (data) =>
       })
   })
 
-exports.getData = () =>
-  new Promise((resolve, reject) => {
-    sembakoModel.find({})
-      .then(res => {
-        resolve({
-          sukses: true,
-          msg: 'Berhasil Mengambil Data',
-          data: res
+  exports.getData = () =>
+    new Promise((resolve, reject) => {
+      sembakoModel.aggregate([
+        {
+          $lookup: {
+            from: 'transaksis',
+            localField: '_id',
+            foreignField: 'idBarang',
+            as: 'transaksi'
+          }
+        },
+        {
+          $addFields: {
+            jumlahTerjual: { $sum: '$transaksi.jumlah' },
+            totalPendapatan: { $sum: '$transaksi.total' }
+          }
+        },
+        {
+          $project: {
+            transaksi: 0 // hilangkan detail transaksi jika tidak perlu
+          }
+        }
+      ])
+        .then((res) => {
+          resolve({
+            sukses: true,
+            msg: 'Berhasil Mengambil Data',
+            data: res
+          });
         })
-      }).catch(() => reject({
-        sukses: false,
-        msg: 'Gagal Mengmabil Data',
-        data: []
-      }))
-  })
+        .catch(() =>
+          reject({
+            sukses: false,
+            msg: 'Gagal Mengambil Data',
+            data: []
+          })
+        );
+    });
+  
 
 exports.getById = (id) =>
   new Promise((resolve, reject) => {

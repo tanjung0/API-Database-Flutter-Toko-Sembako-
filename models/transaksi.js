@@ -22,17 +22,18 @@ const transaksiSchema = new Schema({
         type:Date,
         default:Date.now
     },
-    status:{
-        type:Number,
-        default:0
-    },
+    status: {
+        type: String,
+        enum: ['pending', 'dibayar', 'selesai', 'dibatalkan'],
+        default: 'pending',
+    },      
     buktiPembayaran:{
         type:String
     },
     alamatpenerima:{
         type:String
     }
-})
+}, { timestamps: true });
 
 
 module.exports=mongoose.model('transaksi',transaksiSchema)

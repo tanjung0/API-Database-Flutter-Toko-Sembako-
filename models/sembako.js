@@ -14,6 +14,13 @@ const sembakoSchema = new Schema({
     merk: {
       type: String
     },
+    stok: {
+      type: Number
+    },
+    stokReserved: {
+      type: Number,
+      default: 0
+    },
     gambar: {
       type: String
     }

@@ -29,3 +29,6 @@ app.use('/transaksi', require('./routes/transaksi'))
 app.listen(5001, () => {
     console.log('Berhasil Jalan')
 })
+
+// index.js atau server.js
+require('./cron/deleteExpiredTransaksi'); // import cron
